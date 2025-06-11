@@ -2,16 +2,43 @@ package main
 
 import (
 	"fmt"
+	"unicode"
 )
 
 func main() {
-	// arr := [5]int{1, 2, 3, 4, 5}
-	// reverseArr(&arr)
-	// fmt.Println(arr)
+	arr := [5]int{1, 2, 3, 4, 5}
+	reverseArr(&arr)
+	fmt.Println(arr)
 
-	slice := []string{"s", "s", "s", "a", "a", "a", "a", "b", "s", "b", "p", "o", "o"} // s a b s b p o
+	slice := []string{"s", "s", "s", "a", "a", "a", "a", "b", "s", "b", "p", "o", "o", "o", "o", "a"} // s a b s b p o
 	fmt.Println(removeDup(slice))
+}
 
+func reverseSlice(slice []byte) []byte {
+	for first, last := 0, len(slice)-1; first < last; first, last = first+1, last-1 {
+		slice[first], slice[last] = slice[last], slice[first]
+	}
+
+	return slice
+}
+
+func mergeSpaces(slice []byte) []byte {
+	correctIndex := 0
+
+	for i, el := range slice {
+		if i == 0 {
+			continue
+		}
+
+		if unicode.IsSpace(rune(el)) && unicode.IsSpace(rune(slice[correctIndex])) {
+			continue
+		} else {
+			correctIndex++
+			slice[correctIndex] = el
+		}
+	}
+
+	return slice[:correctIndex+1]
 }
 
 func reverseArr(arr *[5]int) *[5]int {
@@ -22,27 +49,15 @@ func reverseArr(arr *[5]int) *[5]int {
 	return arr
 }
 
-func reverseSlice(slice []int) []int {
-	for first, last := 0, len(slice)-1; first < last; first, last = first+1, last-1 {
-		slice[first], slice[last] = slice[last], slice[first]
-	}
-
-	return slice
-}
-
 func removeDup(s []string) []string {
-	if len(s) == 0 {
-		return s
-	}
-
-	writeIdx := 1
+	correctIndex := 0
 
 	for i := 1; i < len(s); i++ {
-		if s[i] != s[writeIdx-1] {
-			s[writeIdx] = s[i]
-			writeIdx++
+		if s[correctIndex] != s[i] {
+			correctIndex++
+			s[correctIndex] = s[i]
 		}
 	}
 
-	return s[:writeIdx]
+	return s[:correctIndex+1]
 }
